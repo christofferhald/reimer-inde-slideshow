@@ -46,9 +46,9 @@ function compressCSS() {
 	var plugins = [
 		cssnano()
 	]
-	return gulp.src('./dist/css/*.css')
+	return gulp.src('./dist/*.css')
 		.pipe(postcss(plugins))
-		.pipe(gulp.dest('./dist/css/'))
+		.pipe(gulp.dest('./dist/'))
 }
 
 
