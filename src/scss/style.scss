@@ -1,0 +1,151 @@
+.mySwiper {
+	// border: 5px solid orangered;
+	margin-top: 20px;
+	min-height: calc(100vh - 100px);
+
+	display: flex;
+	flex-direction: column;
+    justify-content: start;
+
+	
+	.swiper-wrapper {
+		// border: 5px solid cyan;
+
+		.swiper-slide {
+			// outline: 2px solid blue;
+
+			box-sizing: border-box;
+			padding: 0;
+			// padding: 0 0.7777777777777778rem;
+		
+			text-align: center;
+			font-size: 18px;
+
+		
+			video {
+				// border: 5px solid green;
+				height: auto;
+				display: block;
+				// background: orangered;
+				
+
+				// aspect-ratio: 16 / 9;
+				// width: 100%;
+				// height: calc(100vw / 1.6);
+
+
+				&::-internal-media-controls-overlay-cast-button {
+					display: none; // Remove cast button on videos
+				}		
+			}
+
+
+			.title {
+				// background: cyan;
+				margin: 0;
+				padding: 10px 0;
+				
+				
+
+				h5 {
+					font-family: "BaskervilleMTStd-Regular", sans-serif;
+					font-weight: 400;
+					font-size: clamp(18px, calc(1vw * 2.4), 24px);
+					line-height: 140%;	
+				}
+			}
+		}
+
+
+		
+	}
+
+
+
+
+
+
+	.swiper-pagination { // H = 30
+		// background: lime;
+		
+
+		position: relative;
+		bottom: initial;
+
+		--swiper-pagination-bullet-size: 12px;
+		--swiper-pagination-bullet-inactive-opacity: 1;
+		--swiper-pagination-bullet-inactive-color : none;
+
+		--swiper-pagination-bullet-opacity: 1;
+		--swiper-pagination-color: #000000;
+
+		.swiper-pagination-bullet {
+			border: 1px solid var(--swiper-pagination-color);
+
+			// &.swiper-pagination-bullet-active {
+			// 	border: 5px solid orange;
+			// }
+		}
+	}
+
+
+
+
+	.swiper-button-prev,
+	.swiper-button-next {
+		display: none;
+		color: black;
+		--swiper-navigation-size: 25px;
+
+	}
+
+
+}
+
+
+
+
+body[data-breakpoint-js="lg"],
+body[data-breakpoint-js="xl"] {
+    .mySwiper {
+		justify-content: center;
+		
+		.swiper-wrapper {
+			.swiper-slide {
+				// outline: 2px solid blue;
+
+				padding-left: calc((var(--swiper-navigation-size)/ 44 * 27) + 20px);
+				padding-right: calc((var(--swiper-navigation-size)/ 44 * 27) + 20px );
+
+				video {
+					max-height: calc(100vh - (100px + 30px + 60px));
+				}
+			}
+
+			.title {
+				min-height: 60px;
+			}
+
+			
+		}
+
+
+
+		.swiper-button-prev,
+		.swiper-button-next {
+			display: block;
+			color: black;
+			--swiper-navigation-size: 25px;
+		}
+
+
+
+		.swiper-pagination {
+			.swiper-pagination-bullet {
+				border: 2px solid var(--swiper-pagination-color);
+			}
+		}
+	}
+}
+
+
