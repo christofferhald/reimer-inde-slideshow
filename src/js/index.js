@@ -96,7 +96,9 @@ const responsiveVideoSourceChange = () => {
 
 const swiperInit = () => {
 	const mySwiper = document.querySelector('.mySwiper')
-	if(!mySwiper) return
+	if (!mySwiper) return
+	
+	mySwiper.classList.add('loaded') // Fade in CSS
 
 
 
@@ -110,7 +112,7 @@ const swiperInit = () => {
 		// modules: [Navigation, Pagination],
 	
 
-		loop: true,
+		// loop: true,
 
 		autoplay: {
           delay: 500,

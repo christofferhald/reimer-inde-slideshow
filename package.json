@@ -1,6 +1,6 @@
 {
   "name": "reimer-inde-slideshow",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Slideshow for Reimer-Inde website. Requires Advanced Custom Fields Pro.",
   "main": "./srcx/js/index.js",
   "scripts": {
