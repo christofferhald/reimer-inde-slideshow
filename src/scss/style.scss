@@ -1,47 +1,61 @@
-.mySwiper {
-	// border: 5px solid orangered;
+.swiper-container {
+	// border: 3px solid lightcoral;
+	// background: lightcoral;
+	
+	min-height: calc(100vh - 120px);
 	margin-top: 20px;
-	min-height: calc(100vh - 100px);
+	
+	@media all and (min-width: 991px) {
+		display: flex;
+		align-items: flex-start;
+	}
+}
 
-	display: flex;
-	flex-direction: column;
-    justify-content: start;
+	
+.mySwiper {
+	// border: 3px solid blue;
+	// background: blue;
 
 	opacity: 0;
-	transition: .4s;
-	transition-delay: 0.1s;
+	transition: 0;
+	transition-delay: 0;
 
 	&.loaded {
 		opacity: 1;
+		transition: .4s;
+		transition-delay: 0.1s;
 	}
 
 	
 	.swiper-wrapper {
-		// border: 5px solid cyan;
+		// border: 3px solid red;
+		// background: red;
 
 		.swiper-slide {
-			// outline: 2px solid blue;
+			// border: 3px solid green;
+			// background: green;
 
 			box-sizing: border-box;
 			padding: 0;
-			// padding: 0 0.7777777777777778rem;
 		
 			text-align: center;
 			font-size: 18px;
-
 		
 			video {
-				// border: 5px solid green;
+				// border: 4px solid purple;
+				// background: greenyellow;
+				
+				
+				aspect-ratio: 1 / 1;
+				@media all and (min-width: 991px) {
+					aspect-ratio: 16 / 9;
+				}
+
+				margin: 0 auto;
+
 				height: auto;
 				display: block;
-				// background: orangered;
 				
-
-				// aspect-ratio: 16 / 9;
-				// width: 100%;
-				// height: calc(100vw / 1.6);
-
-
 				&::-internal-media-controls-overlay-cast-button {
 					display: none; // Remove cast button on videos
 				}		
@@ -52,9 +66,8 @@
 				// background: cyan;
 				margin: 0;
 				padding: 10px 0;
+				min-height: 60px;
 				
-				
-
 				h5 {
 					font-family: "BaskervilleMTStd-Regular", sans-serif;
 					font-weight: 400;
@@ -63,9 +76,6 @@
 				}
 			}
 		}
-
-
-		
 	}
 
 
@@ -76,7 +86,6 @@
 	.swiper-pagination { // H = 30
 		// background: lime;
 		
-
 		position: relative;
 		bottom: initial;
 
@@ -89,10 +98,6 @@
 
 		.swiper-pagination-bullet {
 			border: 1px solid var(--swiper-pagination-color);
-
-			// &.swiper-pagination-bullet-active {
-			// 	border: 5px solid orange;
-			// }
 		}
 	}
 
@@ -101,29 +106,35 @@
 
 	.swiper-button-prev,
 	.swiper-button-next {
+		// background: blue;
+
+		top: calc(50% - 45px); // (60+30)/2
+		padding: 10px 5px;
+		width: (calc(var(--swiper-navigation-size)/ 44 * 27) + (5px + 5px));
+		height: calc(var(--swiper-navigation-size) + (10px + 10px));
+
+
+		
 		display: none;
 		color: black;
 		--swiper-navigation-size: 25px;
-
 	}
-
 
 }
 
 
 
 
-body[data-breakpoint-js="lg"],
-body[data-breakpoint-js="xl"] {
-    .mySwiper {
-		justify-content: center;
-		
+
+
+
+
+@media all and (min-width: 991px) {
+	.mySwiper {
 		.swiper-wrapper {
 			.swiper-slide {
-				// outline: 2px solid blue;
-
-				padding-left: calc((var(--swiper-navigation-size)/ 44 * 27) + 20px);
-				padding-right: calc((var(--swiper-navigation-size)/ 44 * 27) + 20px );
+				padding-left: calc((var(--swiper-navigation-size)/ 44 * 27) + 10px);
+				padding-right: calc((var(--swiper-navigation-size)/ 44 * 27) + 10px );
 
 				video {
 					max-height: calc(100vh - (100px + 30px + 60px));
@@ -133,11 +144,8 @@ body[data-breakpoint-js="xl"] {
 			.title {
 				min-height: 60px;
 			}
-
 			
 		}
-
-
 
 		.swiper-button-prev,
 		.swiper-button-next {
@@ -145,8 +153,6 @@ body[data-breakpoint-js="xl"] {
 			color: black;
 			--swiper-navigation-size: 25px;
 		}
-
-
 
 		.swiper-pagination {
 			.swiper-pagination-bullet {
@@ -157,11 +163,12 @@ body[data-breakpoint-js="xl"] {
 }
 
 
+
+
 @media only screen and (min-device-width: 1024px) and (max-device-width: 1366px) and (-webkit-min-device-pixel-ratio: 2)  and (orientation: portrait)  {
-	body[data-breakpoint-js="lg"],
-	body[data-breakpoint-js="xl"] {
-    	.mySwiper {
-			justify-content: start;
-		}
+	.swiper-container {
+		align-items: flex-start;
 	}
 }
+
+

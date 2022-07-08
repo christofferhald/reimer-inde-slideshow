@@ -16,7 +16,7 @@ function copyImages() {
 			'./src/images/*.jpg',
 			'./src/images/*.gif'
 		])
-		.pipe(gulp.dest('./dist/images/'));
+		.pipe(gulp.dest('./dist/'));
 }
 
 

@@ -26,67 +26,61 @@ import "../scss/style.scss"
 
 
 
+const buildSlideVideos = () => {
+	const browserWidth = window.innerWidth
+	const slides = document.querySelectorAll('.js-swiper-video')
+
+	
+	slides.forEach(slide => {
+		const video 	= document.createElement('video')
+	
+		video.src 		= slide.dataset.videotablet
+		video.poster	= slide.dataset.postertablet
+		video.autoplay 	= true
+		video.controls 	= false
+		video.loop 		= true
+		video.muted 	= true
+		video.width 	= 1080
+		video.height	= 1080
+		video.preload 	= "metadata"
+		
+		video.setAttribute('webkit-playsinline', 'webkit-playsinline')
+		video.setAttribute('playsinline', 'playsinline')
+		
+		if (browserWidth >= 991) {
+			video.poster	= slide.dataset.posterdesktop
+			video.src 		= slide.dataset.videodesktop
+			video.width 	= 1920
+		}
+	
+		slide.appendChild(video);
+	})
+}
 
 
 
-const responsiveVideoSourceSet = () => {
-	// const bodyElement = document.body
-	const breakpoint = document.body.dataset.breakpointJs;
-	window.breakpoint = breakpoint;
 
-	// console.log(breakpoint)
-
+const removeSlideVideos = () => {
+	// const mySwiper = document.querySelector('.mySwiper')
+	// if (!mySwiper) return
+	// mySwiper.classList.remove('loaded') // Fade in CSS
 
 
-	const videoElements = document.querySelectorAll('.responsivevideos');
-	// console.log(videoElements)
+	const slides = document.querySelectorAll('.js-swiper-video')
 
-
-	if (breakpoint == "xs" || breakpoint == "sm" || breakpoint == "md") {
-		videoElements.forEach(video => {
-			// console.log(video.dataset.videodesktop)
-			video.setAttribute('src', video.dataset.videotablet);
-			video.setAttribute('width', "1080");
-			video.setAttribute('height', "1080");
-		})
-	} else {
-		videoElements.forEach(video => {
-			// console.log(video.dataset.videodesktop)
-			video.setAttribute('src', video.dataset.videodesktop);
-			video.setAttribute('width', "1920");
-			video.setAttribute('height', "1080");
-		})
-
-	}
+	slides.forEach(slide => {
+		slide.removeChild(slide.firstElementChild)
+	})
 }
 
 
 
 
 
-const responsiveVideoSourceChange = () => {
-	const breakpointNew = document.body.dataset.breakpointJs;
 
-	// if (breakpointNew != window.breakpoint && breakpointNew == "lg") {
-	// 	// console.log("Switch to desktop videos")
-	// 	responsiveVideoSourceSet()
-	// }
 
-	// if (breakpointNew != window.breakpoint && breakpointNew == "md") {
-	// 	// console.log("Switch to tablet videos")
-	// 	responsiveVideoSourceSet()
-	// }
 
-	if (breakpointNew != window.breakpoint) {
-		// console.log("Switch to desktop videos")
-		responsiveVideoSourceSet()
-	}
 
-	if (breakpointNew != window.breakpoint) {
-		// console.log("Switch to tablet videos")
-		responsiveVideoSourceSet()
-	}
-}
 
 
 
@@ -95,6 +89,9 @@ const responsiveVideoSourceChange = () => {
 
 
 const swiperInit = () => {
+	buildSlideVideos() // Adds element and src
+
+
 	const mySwiper = document.querySelector('.mySwiper')
 	if (!mySwiper) return
 	
@@ -102,7 +99,7 @@ const swiperInit = () => {
 
 
 
-	responsiveVideoSourceSet() // Uses data attr to set source (square og 16:9 format video)
+	// responsiveVideoSourceSet() // Uses data attr to set source (square og 16:9 format video)
 
 	
 		
@@ -113,6 +110,10 @@ const swiperInit = () => {
 	
 
 		// loop: true,
+		// autoplay: false,
+
+		observer: false,
+		resizeObserver: false,
 
 		autoplay: {
           delay: 500,
@@ -139,23 +140,15 @@ const swiperInit = () => {
 
 		/* ON INIT AUTOPLAY THE FIRST VIDEO */
 		on: {
-			// init: function () {
-			// },
-
 			slideChange: function () {
 				const allVideos = document.querySelectorAll('video')
-
 				allVideos.forEach(video => {
-					
-					
-			
+	
 					setTimeout(() => {
 						video.currentTime = 0
 					}, 150)
 				})
 			}
-
-
 		}
 
 	})
@@ -169,13 +162,92 @@ const swiperInit = () => {
 
 
 
-// Resize
+
+
+
+
+
+
+
+let newWidth = window.innerWidth
+let oldWidth = newWidth
+let resizeId = null;
+
 window.addEventListener('resize', () => {
-	responsiveVideoSourceChange()
+	// clearTimeout(resizeId);
+	
+
+
+	newWidth = window.innerWidth;
+
+	if (newWidth <= 900 && oldWidth > 900) { 
+		console.log("SMALLER")
+		const mySwiper = document.querySelector('.mySwiper')
+		mySwiper.classList.remove('loaded') // Fade in CSS // Fade out
+		
+		clearTimeout(resizeId);
+		resizeId = setTimeout(doneResizing, 500);
+	}
+
+	if (newWidth > 900 && oldWidth <= 900) {
+		console.log("BIGGER")
+		const mySwiper = document.querySelector('.mySwiper')
+		mySwiper.classList.remove('loaded') // Fade in CSS // Fade out
+		
+		clearTimeout(resizeId);
+		resizeId = setTimeout(doneResizing, 500);
+	}
+
+	oldWidth = newWidth
+
+	
 })
 
 
 
+function doneResizing() {
+	// alert('Resize trigger')
+	removeSlideVideos()
+	buildSlideVideos()
+	
+	// Fade in
+	const mySwiper = document.querySelector('.mySwiper')
+	mySwiper.classList.add('loaded') // Fade in CSS
+}
+
+
+
+
+// Closure last-height/width
+// var lastX = window.innerWidth
+// var lastY = window.innerHeight
+
+// function fooOnResize() {
+// 	var x = window.innerWidth
+// 	var y = window.innerHeight
+   
+// 	if (lastX < 900 && 900 <= x) {
+// 		console.log("OVER")
+// 		// removeSlideVideos()
+// 		// buildSlideVideos()
+// 	}
+
+// 	if (lastX >= 900 && 900 > x) {
+// 		console.log("UNDER")
+// 		// removeSlideVideos()
+// 		// buildSlideVideos()
+// 	}
+	
+// 	lastX = x
+// 	lastY = y
+// }
+
+// window.addEventListener("resize", fooOnResize)
+
+
+// window.addEventListener('resize', () => {
+// 	// Swiper.update()
+// })
 
 
 
@@ -183,5 +255,4 @@ window.addEventListener('resize', () => {
 window.addEventListener("DOMContentLoaded", () => {
 	swiperInit()
 })
-	
 	
