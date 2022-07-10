@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Reimer_Inde_Slideshow
- * @version 1.0.14
+ * @version 1.0.15
  */
 /*
 Plugin Name: Reimer-Inde Slideshow
 Plugin URI: https://www.christofferhald.dk
 Description: Custom slideshow for Reimer-Inde, requires plug-in Advanced Custom Fields Pro. Use shortcode [reimer_inde_slideshow]
 Author: Christoffer Helgelin Hald
-Version: 1.0.14
+Version: 1.0.15
 Author URI: https://www.christofferhald.dk
 */
 
@@ -16,8 +16,8 @@ Author URI: https://www.christofferhald.dk
 
 function reimer_inde_loadscripts() {
 	function load_custom_functions() {
-		wp_register_style('style', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.css','','1.0.14');
-		wp_register_script('main', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.js','','1.0.14', false);
+		wp_register_style('style', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.css','','1.0.15');
+		wp_register_script('main', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.js','','1.0.15', false);
 
 		wp_enqueue_style('style');
 		wp_enqueue_script('main');
