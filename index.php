@@ -1,108 +1,100 @@
 <?php
 /**
- * @package Reimer_Inde_Slideshow
- * @version 1.0.15
+ * @package Malmos_REST_API_endpoints
+ * @version 1.0.0
  */
 /*
-Plugin Name: Reimer-Inde Slideshow
-Plugin URI: https://www.christofferhald.dk
-Description: Custom slideshow for Reimer-Inde, requires plug-in Advanced Custom Fields Pro. Use shortcode [reimer_inde_slideshow]
+Plugin Name: Malmos REST API endpoints
+Plugin URI: https://www.re-public.com
+Description: Custom news endpoint for idverde website. Access at <code>https://malmos.as/wp-json/idverde/news/v1/10/</code> (10 posts)
 Author: Christoffer Helgelin Hald
-Version: 1.0.15
-Author URI: https://www.christofferhald.dk
+Version: 1.0.0
+Author URI: https://www.re-public.com
 */
 
 
-
-function reimer_inde_loadscripts() {
-	function load_custom_functions() {
-		wp_register_style('style', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.css','','1.0.15');
-		wp_register_script('main', plugins_url( '' , __FILE__ ) . '/dist/reimer-inde-slideshow.js','','1.0.15', false);
-
-		wp_enqueue_style('style');
-		wp_enqueue_script('main');
-	}
-
-	add_action('wp_enqueue_scripts', 'load_custom_functions');
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function reimer_inde_slideshow_function(){
-	reimer_inde_loadscripts(); // Loads Javacript and CSS
-	$output = null;
+function custom_JSON_endpoint($data) {
 	
-	$videolist = get_field('video_list');
+	$args = array(
+		// 'posts_per_page' 	=> 2,
+		'showposts' => $data['items'],
+		// 'lang' => 'en',
+		'category_name' => 'nyhed',
+		// 'post_type' => 'medarbejder',
+        'post_status' => 'publish',
+
+		'meta_query' => array(
+			array(
+				'key'   => 'idverde_show',
+				'value' => '1'
+			)
+		)
+	);
 
 
-	if ($videolist) {
-		$output = <<<EOD
-			<div class="swiper-container">
-				<div class="swiper mySwiper">
-					<div class="swiper-wrapper">
-		EOD;
-		
+	$items = array();
 
+	$query = new WP_Query($args);
 
-		foreach($videolist as $key => $element) {
-			$title 					= $element['title'];
-			$video_desktop 			= $element['video_16_9'];
-			$video_tablet 			= $element['video_1_1'];
-			$video_postertablet		= plugins_url( '' , __FILE__ ) . '/dist/poster-tablet.png';
-			$video_posterdesktop	= plugins_url( '' , __FILE__ ) . '/dist/poster-desktop.png';
-			$delay 					= $element['delay'] - 200;
+	if ($query->posts) {
+		foreach ($query->posts as $key => $post) {
+			$id = $post->ID;
 
+			$id_digits 		= sprintf("%08d", $id);
+			$permalink 		= get_the_permalink($id);
+			$title 			= get_the_title($id);
+			$date 			= get_the_date('dmY', $id);
+			$excerpt 		= get_the_excerpt($id);
 
+			$imageID 		= get_post_thumbnail_id($id);
+			$imageArray 	= wp_get_attachment_image_src( $imageID, 'large' );
+
+			// Only the URL
+			$image = false;
+			if ($imageArray) {
+				$image = $imageArray[0];
+			}
 			
-			$output .= <<<EOD
-				<div class="swiper-slide" data-swiper-autoplay="$delay">
-					<div class="js-swiper-video" data-videodesktop="$video_desktop" data-videotablet="$video_tablet" data-postertablet="$video_postertablet" data-posterdesktop="$video_posterdesktop"></div>
 
-					<div class="title">
-						<h5>$title</h5>
-					</div>
-				</div>
-			EOD;
+			$content 		= apply_filters('the_content', get_post_field('post_content', $id));
+			
+			// Sanitation
+			$content 		= str_replace('<p><!--more--></p>', '', $content);
+			$content 		= str_replace('<!--more-->', '', $content);
+
+
+			$items[] = array(
+				'overskrift' => $title,
+				'dato' => $date,
+				'id' => $id,
+				'id_artikel' => $id_digits,
+				"lead_artikel" => $excerpt,
+				"tekst_nyheder" => $content,
+				"billede_artikel" => $image,
+				"billede_artikel_array" => $imageArray,
+				"permalink" => $permalink	
+			);
+
 		}
-
-
-
-		$output .= <<<EOD
-		
-					</div>
-
-					<div class="swiper-button-next"></div>
-					<div class="swiper-button-prev"></div>
-					<div class="swiper-pagination"></div>
-				</div>
-			</div>
-
-		EOD;
 	}
-	
-
-	return $output;
+	return $items;
 }
 
 
 
-// <hr />
-
-// 			<video poster="http://localhost:8888/wp-content/plugins/reimer-inde-slideshow/dist/poster-desktop.png" width="1920" height="1080" autoplay muted loop controls>
-// 				<source src="https://reimerinde.dev.christofferhald.dk/wp-content/uploads/2022/07/Ikea-3Partners-1920x1080_2500kbps.mp4" type="video/mp4">
-// 				Your browser does not support the video tag.
-// 			</video>
 
 
-add_shortcode('reimer_inde_slideshow', 'reimer_inde_slideshow_function');
+
+
+
+
+
+
+add_action( 'rest_api_init', function() {
+	register_rest_route( 'idverde/news/v1', '/(?P<items>\d+)', array(
+		// register_rest_route( 'idverde/v1', '/items', array(
+		'methods' => 'GET',
+		'callback' => 'custom_JSON_endpoint',
+	));
+});
 ?>
